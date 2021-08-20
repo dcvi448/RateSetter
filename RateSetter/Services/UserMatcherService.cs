@@ -10,7 +10,10 @@ namespace RateSetter.Services
     {
         public bool IsMatch(User newUser, User existingUser)
         {
-            throw new NotImplementedException();
+            IValidateService validate = new ValidateService();
+            validate = new DistanceValidate(validate);
+            validate = new AddressValidate(validate);
+            validate = new ReferralCodeValidate(validate);
         }
     }
 }

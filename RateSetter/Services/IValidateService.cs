@@ -9,6 +9,6 @@ namespace RateSetter.Services
     public interface IValidateService
     {
         // 0 : Ok, >0: existing members
-        public uint Validate(List<User> listUser, User user);
+        public uint Validate(User newUser, User existingUser);
     }
 }
