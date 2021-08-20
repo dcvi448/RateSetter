@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RateSetter.Services
 {
     public interface IUserMatcher
-    {
+    {        
         public bool IsMatch(User newUser, User existingUser);
     }
 }

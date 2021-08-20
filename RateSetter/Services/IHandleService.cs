@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace RateSetter.Services
 {
-    public interface IValidateService
-    {
-        // 0 : Ok, >0: existing members
-        public uint Validate(User newUser, User existingUser);
+    public interface IHandleService
+    {       
+        public bool IsValidate(User newUser, User existingUser);
+        public void Next(IHandleService next);
     }
 }

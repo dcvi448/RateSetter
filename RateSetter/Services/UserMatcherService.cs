@@ -10,10 +10,12 @@ namespace RateSetter.Services
     {
         public bool IsMatch(User newUser, User existingUser)
         {
-            IValidateService validate = new ValidateService();
-            validate = new DistanceValidate(validate);
-            validate = new AddressValidate(validate);
-            validate = new ReferralCodeValidate(validate);
+            IHandleService distanceHandler = new DistanceHandler();
+            IHandleService addressHandler = new AddressHandler();
+            IHandleService refCodeHandler = new ReferralCodeHandler();
+            distanceHandler.Next(addressHandler);
+            addressHandler.Next(refCodeHandler);
+            return distanceHandler.IsValidate(newUser, existingUser);
         }
     }
 }
