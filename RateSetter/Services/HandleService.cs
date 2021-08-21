@@ -53,20 +53,36 @@ namespace RateSetter.Services
             this.next = next;
         }
         public bool IsValidate(User newUser, User existingUser)
-        {
-            var refCodeCurrentUser = existingUser.ReferralCode.ToUpper().GroupBy(c => c).Select(c => new { Char = c.Key, Count = c.Count() }).ToList();
-            var refCodeNextUser = newUser.ReferralCode.ToUpper().GroupBy(c => c).Select(c => new { Char = c.Key, Count = c.Count() }).ToList();
-            refCodeNextUser.Sort((x1, x2) => x1.Char.CompareTo(x2.Char));
-            refCodeCurrentUser.Sort((x1, x2) => x1.Char.CompareTo(x2.Char));
-
-            //To avoid ABC123 = ABC1234
-            if (refCodeCurrentUser.Count() != refCodeNextUser.Count())
+        {            
+            if (existingUser.ReferralCode.Length != newUser.ReferralCode.Length)
                 return true;
-
-            for (int i = 0; i < refCodeCurrentUser.Count(); i++)
+            if (existingUser.ReferralCode == newUser.ReferralCode)
+                return false;
+            int ep = 0;
+            bool haveReversed = false;            
+            char[] existingUserArray = existingUser.ReferralCode.ToArray();
+            char[] newUserUserArray = newUser.ReferralCode.ToArray();
+            while(ep < existingUserArray.Count())
             {
-                if (refCodeCurrentUser[i].Char != refCodeNextUser[i].Char || refCodeCurrentUser[i].Count != refCodeNextUser[i].Count)
-                    return true;
+                if(existingUserArray[ep] != newUserUserArray[ep])
+                {
+                    int np = ep + Base.INVERSER_NUMBER_CHARACTER - 1;
+                    while(Math.Abs(np-ep) < Base.INVERSER_NUMBER_CHARACTER)
+                    {
+                        if (existingUserArray[ep] != newUserUserArray[np])
+                            return true;
+                        else
+                        {
+                            if (haveReversed)
+                                return true;
+                            np--;
+                            if (Math.Abs(np - (ep + 1)) < Base.INVERSER_NUMBER_CHARACTER)
+                                ep++;
+                        }
+                    }
+                    haveReversed = true;
+                }
+                ep++;
             }
             return false;
         }

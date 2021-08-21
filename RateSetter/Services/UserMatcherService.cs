@@ -15,7 +15,8 @@ namespace RateSetter.Services
             IHandleService refCodeHandler = new ReferralCodeHandler();
             distanceHandler.Next(addressHandler);
             addressHandler.Next(refCodeHandler);
-            return distanceHandler.IsValidate(newUser, existingUser);
+            //if 2 objects are valid => not match
+            return !distanceHandler.IsValidate(newUser, existingUser); 
         }
     }
 }
