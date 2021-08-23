@@ -20,7 +20,7 @@ namespace RateSetter.Services
 
         public bool IsValidate(User newUser, User existingUser)
         {
-            double distance = newUser.DistanceToOtherUser(existingUser);
+            var distance = newUser.DistanceToOtherUser(existingUser);
             if (Math.Abs(distance) <= Base.MAX_DISTANCE)
                 return false;
             else
@@ -36,10 +36,10 @@ namespace RateSetter.Services
         }
         public bool IsValidate(User newUser, User existingUser)
         {
-            string addressCurrentUserOrigin = string.Join(existingUser.Address.Suburb, existingUser.Address.StreetAddress, existingUser.Address.State);
-            string addressNextUserOrigin = string.Join(newUser.Address.Suburb, newUser.Address.StreetAddress, newUser.Address.State);
-            string addressCurrentUserFormarted = Regex.Replace(addressCurrentUserOrigin, "[^a-zA-Z0-9]+", "", RegexOptions.Compiled);
-            string addressNextUserFormarted = Regex.Replace(addressNextUserOrigin, "[^a-zA-Z0-9]+", "", RegexOptions.Compiled);
+            var addressCurrentUserOrigin = string.Join(existingUser.Address.Suburb, existingUser.Address.StreetAddress, existingUser.Address.State);
+            var addressNextUserOrigin = string.Join(newUser.Address.Suburb, newUser.Address.StreetAddress, newUser.Address.State);
+            var addressCurrentUserFormarted = Regex.Replace(addressCurrentUserOrigin, "[^a-zA-Z0-9]+", "", RegexOptions.Compiled);
+            var addressNextUserFormarted = Regex.Replace(addressNextUserOrigin, "[^a-zA-Z0-9]+", "", RegexOptions.Compiled);
             if (addressCurrentUserFormarted.ToUpper() == addressNextUserFormarted.ToUpper())
                 return false;
             return next.IsValidate(newUser, existingUser);
@@ -61,26 +61,22 @@ namespace RateSetter.Services
             int ep = 0;
             bool haveReversed = false;            
             char[] existingUserArray = existingUser.ReferralCode.ToArray();
-            char[] newUserUserArray = newUser.ReferralCode.ToArray();
+            char[] newUserArray = newUser.ReferralCode.ToArray();
             while(ep < existingUserArray.Count())
             {
-                if(existingUserArray[ep] != newUserUserArray[ep])
+                if(existingUserArray[ep] != newUserArray[ep])
                 {
-                    int np = ep + Base.INVERSER_NUMBER_CHARACTER - 1;
-                    while(Math.Abs(np-ep) < Base.INVERSER_NUMBER_CHARACTER)
+                    if (ep + Base.INVERSER_NUMBER_CHARACTER > existingUserArray.Count())
+                        return true;
+                    char[] newUserComparingArray = newUser.ReferralCode.Substring(ep, Base.INVERSER_NUMBER_CHARACTER).ToArray();
+                    Array.Reverse(newUserComparingArray);
+                    if (haveReversed)
+                        return true;
+                    if (existingUser.ReferralCode.Substring(ep, Base.INVERSER_NUMBER_CHARACTER) == new string(newUserComparingArray))
                     {
-                        if (existingUserArray[ep] != newUserUserArray[np])
-                            return true;
-                        else
-                        {
-                            if (haveReversed)
-                                return true;
-                            np--;
-                            if (Math.Abs(np - (ep + 1)) < Base.INVERSER_NUMBER_CHARACTER)
-                                ep++;
-                        }
+                        haveReversed = true;
+                        ep += Base.INVERSER_NUMBER_CHARACTER - 1;
                     }
-                    haveReversed = true;
                 }
                 ep++;
             }
