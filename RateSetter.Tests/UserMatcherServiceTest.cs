@@ -173,5 +173,26 @@ namespace RateSetter.Tests
             };
             Assert.False(userMatcher.IsMatch(newUser, existingUser));
         }
+        [Fact]
+        // Case 6: ABC123 vs CBA123
+        public void UserSameRefCodeT6()
+        {
+            IUserMatcher userMatcher = new UserMatcher();
+            User newUser = new User
+            {
+                Name = "Mr Duc",
+                ReferralCode = "ABC123",
+                Address =
+                new Address() { Latitude = (decimal)16.045740, Longitude = (decimal)108.243220, State = "VN", StreetAddress = "Phan Tu", Suburb = "41" }
+            };
+            User existingUser = new User
+            {
+                Name = "Mr Huy",
+                ReferralCode = "CBA123",
+                Address =
+                new Address() { Latitude = (decimal)5.045959, Longitude = (decimal)108.244199, State = "VN", StreetAddress = "Phan Tu", Suburb = "18" }
+            };
+            Assert.True(userMatcher.IsMatch(newUser, existingUser));
+        }
     }
 }
