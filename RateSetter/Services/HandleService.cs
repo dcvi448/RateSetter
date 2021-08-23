@@ -60,8 +60,8 @@ namespace RateSetter.Services
                 return false;
             int ep = 0;
             bool haveReversed = false;            
-            char[] existingUserArray = existingUser.ReferralCode.ToArray();
-            char[] newUserArray = newUser.ReferralCode.ToArray();
+            var existingUserArray = existingUser.ReferralCode.ToArray();
+            var newUserArray = newUser.ReferralCode.ToArray();
             while(ep < existingUserArray.Count())
             {
                 if(existingUserArray[ep] != newUserArray[ep])
