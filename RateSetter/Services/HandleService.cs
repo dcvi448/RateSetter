@@ -20,7 +20,7 @@ namespace RateSetter.Services
 
         public bool IsValidate(User newUser, User existingUser)
         {
-            double distance = newUser.GetDistanceUsers(existingUser);
+            double distance = newUser.DistanceToOtherUser(existingUser);
             if (Math.Abs(distance) <= Base.MAX_DISTANCE)
                 return false;
             else
